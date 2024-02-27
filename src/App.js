@@ -14,12 +14,23 @@ function App() {
         fetch(query).then(response => response.json()).then(data => setTranslation(data.responseData.translatedText));
     };
 
-  return (
+    const handleSpeechRecognition = () =>{
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        const recognition = new SpeechRecognition();
+        recognition.start();
+        recognition.onresult = (event) => {
+            setInput(event.results[0][0].transcript);
+            handleTranslate();
+        }
+    }
+
+    return (
     <div className="App">
         <input type="text" value={input} onChange={handleInputChange}/>
-        <p>{input}</p>
+        <p>{input.toString()}</p>
         <button onClick={handleTranslate}>Translate</button>
-        <p>{translation}</p>
+        <button onClick={handleSpeechRecognition}>Voice Input</button>
+        <p>{translation.toString()}</p>
     </div>
   );
 }
