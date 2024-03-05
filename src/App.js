@@ -1,10 +1,18 @@
 import './App.scss';
 import { useState, useEffect } from "react";
+import {useTranslation} from "./hooks/useTranslation";
 
 function App() {
     const [input, setInput] = useState('');
-    const [translation, setTranslation] = useState('');
     const [history, setHistory] = useState([]);
+    const {translationObject} = useTranslation({textToTranslate: input, debounceTime: 1000});
+
+    useEffect(() => {
+        if (!translationObject.translatedText) {
+            return;
+        }
+        addToHistory(translationObject.textToTranslate, translationObject.translatedText);
+    }, [translationObject.translatedText])
 
     const addToHistory = (newInput, newTranslation) => {
         const newHistoryItem = { input: newInput, translation: newTranslation };
@@ -13,17 +21,6 @@ function App() {
 
     const handleInputChange = (event) => {
         setInput(event.target.value);
-    };
-
-    const handleTranslate = async () => {
-        if (!input) return;
-        let query = `https://api.mymemory.translated.net/get?q=${input}&langpair=en|tr`;
-        fetch(query)
-            .then(response => response.json())
-            .then(data => {
-                setTranslation(data.responseData.translatedText);
-                addToHistory(input, data.responseData.translatedText);
-            });
     };
 
     const handleSpeechRecognition = () => {
@@ -44,9 +41,9 @@ function App() {
                     <input className="text-input" type="text" value={input} onChange={handleInputChange}
                            placeholder="Enter text here..."/>
                 </div>
-                <output className="translation-output">{translation}</output>
+                <output className="translation-output">{translationObject.translatedText}</output>
             </div>
-            <button className="translate-btn" onClick={handleTranslate}>Translate</button>
+
             <div className="history">
                 <h2>History</h2>
                 <ul>
