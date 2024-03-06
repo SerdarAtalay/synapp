@@ -5,21 +5,24 @@ import {useTranslation} from "./hooks/useTranslation";
 function App() {
     const [input, setInput] = useState('');
     const [history, setHistory] = useState([]);
-    const {translationObject} = useTranslation({textToTranslate: input, debounceTime: 1000});
+    const [isAudio, setIsAudio] = useState(false);
+    const {translationObject} = useTranslation({textToTranslate: input, debounceTime: isAudio? 0: 618, isAudio: isAudio});
 
     useEffect(() => {
         if (!translationObject.translatedText) {
             return;
         }
-        addToHistory(translationObject.textToTranslate, translationObject.translatedText);
+        addToHistory(translationObject.textToTranslate, translationObject.translatedText, translationObject.isAudio);
     }, [translationObject.translatedText])
 
-    const addToHistory = (newInput, newTranslation) => {
-        const newHistoryItem = { input: newInput, translation: newTranslation };
+    const addToHistory = (newInput, newTranslation, isAudio) => {
+        const newHistoryItem = { input: newInput, translation: newTranslation, isAudio: isAudio };
         setHistory(prevHistory => [...prevHistory, newHistoryItem]);
     };
 
     const handleInputChange = (event) => {
+        // if handleSpeechRecognition is not used, isAudio is always false
+        setIsAudio(false);
         setInput(event.target.value);
     };
 
@@ -29,6 +32,7 @@ function App() {
         recognition.start();
         recognition.onresult = (event) => {
             const transcript = event.results[0][0].transcript;
+            setIsAudio(!!transcript);
             setInput(transcript);
         };
     };
@@ -49,7 +53,8 @@ function App() {
                 <ul>
                     {history.map((item, index) => (
                         <li key={index}>
-                            <strong>Input:</strong> {item.input} <br />
+                            <strong>Input:</strong> {item.input}{item.isAudio ? <strong>🎙</strong> : null}
+                            <br />
                             <strong>Translation:</strong> {item.translation}
                         </li>
                     ))}

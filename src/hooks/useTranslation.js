@@ -1,6 +1,6 @@
 import {useEffect, useState} from 'react'
 
-export const useTranslation= ({textToTranslate, debounceTime = 618}) => {
+export const useTranslation= ({textToTranslate, debounceTime = 618, isAudio}) => {
     const [translatedText, setTranslatedText] = useState('')
 
     useEffect(() => {
@@ -24,6 +24,6 @@ export const useTranslation= ({textToTranslate, debounceTime = 618}) => {
             });
     }
     return {
-        translationObject:{textToTranslate, translatedText}
+        translationObject:{textToTranslate, translatedText, isAudio}
     }
 }
