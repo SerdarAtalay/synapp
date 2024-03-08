@@ -33,15 +33,6 @@
     transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
   }
 
-  .translate-btn, .clear-history-btn {
-    background-color: #007aff;
-    color: white;
-    cursor: pointer;
-
-    &:hover {
-      background-color: darken(#007aff, 10%);
-    }
-  }
   .voice-btn {
     background-color: #efefef;
     color: white;
@@ -53,12 +44,75 @@
       border: 1px solid #aaa;
     }
   }
+
+  .history {
+    margin-top: 20px;
+    width: 45%;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    padding: 20px;
+    text-align: center;
+    height: 33vh;
+    overflow: scroll;
+
+    h2 {
+      color: #333;
+      margin-bottom: 15px;
+    }
+
+    ul {
+      list-style-type: none;
+      padding: 0;
+
+      li {
+        background-color: #f9f9f9;
+        border-radius: 5px;
+        padding: 10px;
+        margin-bottom: 10px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+
+        strong {
+          color: #007bff;
+        }
+      }
+    }
+
+    .clear-history-btn {
+      background-color: #007aff;
+      color: white;
+      cursor: pointer;
+
+      &:hover {
+        background-color: darken(#007aff, 10%);
+      }
+    }
+  }
+
 }
 
 @media (max-width: 768px) {
   .App {
-    .text-input, .translation-output {
-      width: 90%;
+    padding: 5px;
+    justify-content: flex-start;
+    .input-output {
+      flex-direction: column;
+      margin-bottom: 20px;
+    }
+    .input-field {
+      margin-left: -75px;
+      margin-top: 30px;
+      padding-bottom: 20px;
+      .text-input {
+      height: 23vh;
+      }
+    }
+    .translation-output, .input-field, .history {
+      max-height: 23vh;
     }
   }
 }
